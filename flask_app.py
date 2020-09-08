@@ -90,14 +90,11 @@ def updateschedule():
                 return 'ok'
             if data['object']['text'] == '!lessons':
                 parse()
-                last_updating_lessons_time = data['object']['date']
-                append_last_eventid(data['event_id'])
-            return 'ok'
-
     except Exception as err:  # TODO нормальный перехват ошибок
         logger.opt(exception=True).error(err)
-        return 'ok'
     finally:
+        last_updating_lessons_time = data['object']['date']
+        append_last_eventid(data['event_id'])
         thirty_minutes_of_unixtime = 1800
         vkapi = VkApi(vk['user_token']).get_api()
 
@@ -107,6 +104,7 @@ def updateschedule():
         vkapi.wall.post(owner_id=vk['timerbotgroup_id'],
                         message='!lessons',
                         publish_date=data['object']['date'] + thirty_minutes_of_unixtime)
+        return 'ok'
 
 
 @app.route('/update_server', methods=['POST'])
