@@ -1,5 +1,6 @@
 from .. import command_system
 from .. import sql as sqlapi
+from ..utils import text_to_img as img
 
 
 def changes_(user_id, _):
@@ -10,9 +11,10 @@ def changes_(user_id, _):
 
         changes_date = db.sysdata.get_changes_date()  # дата последних замен
         lessons_from_db = db.changes.get(last_group)  # массив с данными замен
+        islef = bool(lessons_from_db[1])
 
     if lessons_from_db:
-        lefort = '(Лефортово)' if bool(lessons_from_db[1]) else ''
+        lefort = '(Лефортово)' if islef else ''
 
         lessons = f'{last_group} {lefort}\n' \
                   f'Замены на {changes_date}\n\n' \
@@ -28,10 +30,12 @@ def changes_(user_id, _):
                   f'Кабинет: ({lessons_from_db[11]})\n' \
                   f'Пара 6: {lessons_from_db[12]}\n' \
                   f'Кабинет: ({lessons_from_db[13]})\n'
-        return lessons, ('makephoto', lefort)
     else:
         errormsg = f"Замены на {changes_date}\n для {last_group} не найдены!"
         return errormsg, ('text',)
+
+    path = img.create_photo(user_id, lessons, islef)
+    return lessons, ('photo', path)
 
 
 changes_command = command_system.Command()

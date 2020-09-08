@@ -1,6 +1,7 @@
 from .. import command_system
 from .. import sql as sqlapi
 from ..utils import week_and_date as weekday
+from ..utils import text_to_img as img
 
 
 def schedule_(user_id, message):
@@ -16,9 +17,10 @@ def schedule_(user_id, message):
         week = weekday.get_week(day)  # верхняя/нижняя неделя
         isupper = True if week == 'Верхняя' else False
         lessons_from_db = db.schedule.get(last_group, isupper=isupper, day=day)
+        islef = bool(lessons_from_db[1])
 
     if lessons_from_db:
-        lefort = '(Лефортово)' if bool(lessons_from_db[1]) else ''
+        lefort = '(Лефортово)' if islef else ''
 
         lessons = f'{last_group} {lefort}\n' \
                   f'{week} неделя\n' \
@@ -39,7 +41,9 @@ def schedule_(user_id, message):
         errormsg = f'Расписание для {last_group} не найдено, проверьте правильность написания группы ' \
                    'или обратитесь к разработчику бота.'
         return errormsg, ('text',)
-    return lessons, ('makephoto', lefort)
+
+    path = img.create_photo(user_id, lessons, islef)
+    return lessons, ('photo', path)
 
 
 schedule_command = command_system.Command()

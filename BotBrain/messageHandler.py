@@ -56,8 +56,5 @@ def create_answer(data, token):
     answer, attachment = request_recognizer(user_id, message)
     if attachment[0] == 'text':
         vk.text_msg(user_id, answer, keyboard=vk.keyboard_main)
-    elif attachment[0] == 'makephoto':
-        path = img.create_photo(user_id, answer, bool(attachment[1]))
-        vk.photo_msg(user_id, path_to_photo=path)
-    elif attachment[0] == 'sendphoto':
-        vk.photo_msg(user_id, path_to_photo=answer)
+    elif attachment[0] == 'photo':
+        vk.photo_msg(user_id, path_to_photo=attachment[1])
