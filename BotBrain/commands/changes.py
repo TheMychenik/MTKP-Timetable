@@ -11,9 +11,9 @@ def changes_(user_id, _):
 
         changes_date = db.sysdata.get_changes_date()  # дата последних замен
         lessons_from_db = db.changes.get(last_group)  # массив с данными замен
-        islef = bool(lessons_from_db[1])
 
     if lessons_from_db:
+        islef = bool(lessons_from_db[1])
         lefort = '(Лефортово)' if islef else ''
 
         lessons = f'{last_group} {lefort}\n' \

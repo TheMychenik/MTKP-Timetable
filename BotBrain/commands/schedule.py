@@ -17,9 +17,9 @@ def schedule_(user_id, message):
         week = weekday.get_week(day)  # верхняя/нижняя неделя
         isupper = True if week == 'Верхняя' else False
         lessons_from_db = db.schedule.get(last_group, isupper=isupper, day=day)
-        islef = bool(lessons_from_db[1])
 
     if lessons_from_db:
+        islef = bool(lessons_from_db[1])
         lefort = '(Лефортово)' if islef else ''
 
         lessons = f'{last_group} {lefort}\n' \
