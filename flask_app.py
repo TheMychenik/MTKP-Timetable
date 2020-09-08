@@ -73,22 +73,25 @@ def updateschedule():
     data = json.loads(request.data)
     if 'type' not in data.keys() or data['secret'] != vk['timersecret_key']:
         return 'not vk'
-    try:
-        if data['type'] == 'confirmation':
-            return callback_confirmation(data['group_id'])
 
-        elif data['type'] == 'wall_post_new' and data['event_id'] not in last_event_ids:
-            """В группе в вк выкладывается пост, если его текст !lessons, то выполняется парсинг. 
-            Потом пост удаляется и создается новый с отложенной публикацией на 30 минут. Такой таймер..."""
-            global last_updating_lessons_time
-            # Проверка, что новый запрос пришел не раньше чем через 20 мин от прошлого.
-            # Вк любит присылать повторные запросы
-            if int(data['object']['date']) - int(last_updating_lessons_time) < 1200:
-                logger.info('Repeated request to update lesson')
-                append_last_eventid(data['event_id'])
-                return 'ok'
-            if data['object']['text'] == '!lessons':
-                parse()
+    if data['type'] == 'confirmation':
+        try:
+            return callback_confirmation(data['group_id'])
+        except Exception as err:  # TODO нормальный перехват ошибок
+            logger.opt(exception=True).error(err)
+    elif data['type'] == 'wall_post_new' and data['event_id'] not in last_event_ids:
+        """В группе в вк выкладывается пост, если его текст !lessons, то выполняется парсинг. 
+        Потом пост удаляется и создается новый с отложенной публикацией на 30 минут. Такой таймер..."""
+        global last_updating_lessons_time
+        # Проверка, что новый запрос пришел не раньше чем через 20 мин от прошлого.
+        # Вк любит присылать повторные запросы
+        if int(data['object']['date']) - int(last_updating_lessons_time) < 1200:
+            logger.info('Repeated request to update lesson')
+            append_last_eventid(data['event_id'])
+            return 'ok'
+    try:
+        if data['object']['text'] == '!lessons':
+            parse()
     except Exception as err:  # TODO нормальный перехват ошибок
         logger.opt(exception=True).error(err)
     finally:
