@@ -121,4 +121,3 @@ def gitwebhook():
     else:
         logger.info('( Git ) Wrong event type')
         return 'Wrong event type', 400
-
