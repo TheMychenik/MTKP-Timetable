@@ -13,4 +13,7 @@ def download(url, file_name, path):
 def remove_folder_contents(path):
     files = os.listdir(path)
     for file in files:
-        os.remove(os.path.join(path, file))
+        try:
+            os.remove(os.path.join(path, file))
+        except OSError:
+            continue

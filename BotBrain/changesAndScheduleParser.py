@@ -35,8 +35,6 @@ def parse():
         with sqlapi.mysqlapishit() as db:
             db.sysdata.update_schedule_last_url(schedule_data[0])
             logger.info('Schedule url updated')
-    try:
-        parsing.remove_folder_contents(path=dirs['docs'])
-        parsing.remove_folder_contents(path=dirs['images'])
-    except OSError as err:
-        logger.opt(exception=True).error(err)
+
+    parsing.remove_folder_contents(path=dirs['docs'])
+    parsing.remove_folder_contents(path=dirs['images'])
