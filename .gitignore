@@ -1,0 +1,11 @@
+
+# auto created by system
+\.idea/
+__pycache__/
+.env
+venv/
+# my
+docs/
+images/
+logs/
+/settings.py
