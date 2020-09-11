@@ -56,7 +56,7 @@ def update_changes(path_to_file, file_name):
     doc = Document(path_to_file)
     tables = doc.tables
     __find_row_with_group_name(tables)
-    with sqlapi.mysqlapishit() as db:
+    with sqlapi.mysqlapiwrapper() as db:
         try:
             db.changes.clear()
             for less in all_lessons:
