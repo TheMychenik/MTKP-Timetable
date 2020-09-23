@@ -14,32 +14,12 @@ preinstallations()
 
 logger.add(os.path.join(dirs['logs'], 'Bot.txt'),
            format='{time: DD.MM.YYYY at HH:mm:ss} | {module} | {level} | {message}',
-           rotation='1 week', backtrace=False, diagnose=False)
+           rotation='3 days', backtrace=False, diagnose=False)
 
 # stores last 5 messages ids i need it to exclude repeated messages
 last_event_ids = ['']
 
 last_updating_lessons_time = 0
-
-
-def callback_confirmation(group_id):
-    # Если вк требует подтверждение сервера
-    logger.info(f'Сonfirmation request received for group: {group_id}')
-    # через vkapi получет код подтверждения и отправляет его вк
-    vkapi = VkApi(vk['user_token']).get_api()
-    confirmation_token = vkapi.groups.getCallbackConfirmationCode(group_id=group_id)
-    logger.info(f'Сonfirmation token: {confirmation_token}')
-    return confirmation_token['code']
-
-
-def append_last_eventid(eventid: str):
-    """
-    Добовляет id события в массив и следит чтобы было не больше 5
-    :param eventid:
-    """
-    last_event_ids.append(eventid)
-    if len(last_event_ids) > 5:
-        last_event_ids.pop(0)
 
 
 @app.route('/')
@@ -64,7 +44,7 @@ def vkbot():
             return 'ok'
 
     except Exception as err:  # TODO нормальный перехват ошибок
-        logger.opt(exception=True).error(err)
+        logger.exception(err)
         return 'error'
 
 
@@ -75,25 +55,23 @@ def updateschedule():
         return 'not vk'
 
     if data['type'] == 'confirmation':
-        try:
-            return callback_confirmation(data['group_id'])
-        except Exception as err:  # TODO нормальный перехват ошибок
-            logger.opt(exception=True).error(err)
+        return callback_confirmation(data['group_id'])
+
     elif data['type'] == 'wall_post_new' and data['event_id'] not in last_event_ids:
         """В группе в вк выкладывается пост, если его текст !lessons, то выполняется парсинг. 
-        Потом пост удаляется и создается новый с отложенной публикацией на 30 минут. Такой таймер..."""
+        Потом пост удаляется и создается новый с отложенной публикацией на 30 минут. Такой таймер...
+        Затем проверка, что новый запрос пришел не раньше чем через 15 мин от прошлого."""
+
         global last_updating_lessons_time
-        # Проверка, что новый запрос пришел не раньше чем через 20 мин от прошлого.
-        # Вк любит присылать повторные запросы
-        if int(data['object']['date']) - int(last_updating_lessons_time) < 1200:
-            logger.info('Repeated request to update lesson')
+        unix_fiveteen_minutes = 900
+        if int(data['object']['date']) - int(last_updating_lessons_time) < unix_fiveteen_minutes:
             append_last_eventid(data['event_id'])
             return 'ok'
     try:
         if data['object']['text'] == '!lessons':
             parse()
     except Exception as err:  # TODO нормальный перехват ошибок
-        logger.opt(exception=True).error(err)
+        logger.exception(err)
     finally:
         last_updating_lessons_time = data['object']['date']
         append_last_eventid(data['event_id'])
@@ -120,7 +98,31 @@ def gitwebhook():
             logger.info('( Git ) Updated PythonAnywhere successfully')
             return 'Updated PythonAnywhere successfully', 200
         except Exception as err:
-            logger.opt(exception=True).error(f'( Git ) {err}')
+            logger.exception(f'( Git ) {err}')
     else:
         logger.info('( Git ) Wrong event type')
         return 'Wrong event type', 400
+
+
+def append_last_eventid(eventid: str):
+    """
+    Добовляет id события в массив и следит чтобы было не больше 5
+    :param eventid:
+    """
+    last_event_ids.append(eventid)
+    if len(last_event_ids) > 5:
+        last_event_ids.pop(0)
+
+
+def callback_confirmation(group_id):
+    # Если вк требует подтверждение сервера
+    try:
+        logger.info(f'Сonfirmation request received for group: {group_id}')
+        # через vkapi получет код подтверждения и отправляет его вк
+        vkapi = VkApi(vk['user_token']).get_api()
+        confirmation_token = vkapi.groups.getCallbackConfirmationCode(group_id=group_id)
+        logger.info(f'Сonfirmation token: {confirmation_token}')
+    except Exception as err:  # TODO нормальный перехват ошибок
+        logger.opt(exception=True).error(err)
+    else:
+        return confirmation_token['code']

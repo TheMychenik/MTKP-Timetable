@@ -47,15 +47,15 @@ def day_of_week_by_num(day_num: int):
     return key_list[val_list.index(day_num)][1]
 
 
-def get_week(compare_day: int):
+def check_isweek_upper(compare_day: int):
     """
     Определяет верхняя или нижняя неделя по ее номеру
 
     :param compare_day: int
         Если переданный номер дня недели меньше сегоднящнего, то используется следующая неделя
-    :return: str
+    :return: bool
     """
     weeknum = datetime.datetime.now().isocalendar()[1]
     if compare_day < datetime.date.today().isoweekday():
         weeknum += 1
-    return 'Верхняя' if weeknum % 2 == 0 else 'Нижняя'
+    return True if weeknum % 2 == 0 else False

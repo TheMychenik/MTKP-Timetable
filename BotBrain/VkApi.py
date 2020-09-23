@@ -41,5 +41,5 @@ class VkApi:
         keyboard_main.add_button('Сегодня', color=VkKeyboardColor.PRIMARY)
         keyboard_main.add_button('Завтра', color=VkKeyboardColor.PRIMARY)
         keyboard_main.add_line()
-        keyboard_main.add_button('Инфо', color=VkKeyboardColor.DEFAULT)
+        keyboard_main.add_button('Помощь', color=VkKeyboardColor.DEFAULT)
         return keyboard_main.get_keyboard()

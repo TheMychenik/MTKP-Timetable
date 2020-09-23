@@ -14,8 +14,8 @@ def schedule_(user_id, message):
         if day == 7:
             return 'В воскресенье отдыхаем от пар.', ('text',)
 
-        week = weekday.get_week(day)  # верхняя/нижняя неделя
-        isupper = True if week == 'Верхняя' else False
+        isupper = weekday.check_isweek_upper(day)  # верхняя/нижняя неделя
+        week = 'Верхняя' if isupper else 'Нижняя'
         lessons_from_db = db.schedule.get(last_group, isupper=isupper, day=day)
 
     if lessons_from_db:

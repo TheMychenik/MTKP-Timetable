@@ -61,8 +61,7 @@ def __get_lessons(sheet):
                             else:
                                 # [group_name, day, isupper, islef, [(less_1, cab_1), ..., (less_6, cab_6)]]
 
-                                week = weekday.get_week(day)  # верхняя/нижняя неделя
-                                isupper = True if week == 'Верхняя' else False
+                                isupper = weekday.check_isweek_upper(day)  # верхняя/нижняя неделя
                                 if lesson_name.value is not None:
                                     lesson = clear_invisible_character(lesson_name.value, separator=' ')
                                     cab = __get_cab(sheet, lesson_name.row, cabinet_col)

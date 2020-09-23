@@ -1,13 +1,10 @@
 import importlib
 import os
 
-from loguru import logger
-
 from . import sql as sqlapi
 from .VkApi import VkApi
 from .command_system import command_list
 from .utils import text
-from .utils import text_to_img as img
 
 
 def load_modules():
@@ -51,7 +48,6 @@ def create_answer(data, token):
     vk = VkApi(token)
     user_id = data['peer_id']
     message = data['text'].lower()
-    logger.info(f'message from: {user_id} text: {message}')
 
     answer, attachment = request_recognizer(user_id, message)
     if attachment[0] == 'text':
