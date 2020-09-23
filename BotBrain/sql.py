@@ -115,30 +115,32 @@ class mysqlapishit(__connection):
         lessons = self.cursor.fetchone()
         return lessons
 
-    def insert(self, group, islef, lessons, day='', isupper=''):
+        def insert(self, group, islef, lessons, day=None, isupper=None):
         # (list) lessons: ключ - номер пары, кортеж - имя пары, кабинет
-        isupper_col = ''
-        weekday_col = ''
-        isupper_value = ''
-        weekday_value = ''
-
         if self.tablename == 'schedule':
-            isupper_col = f'isupper,'
-            weekday_col = f'day,'
-            isupper_value = f"'{isupper}',"
-            weekday_value = f"'{day}',"
-
-        self.cursor.execute(f"""
-                            INSERT IGNORE INTO {self.tablename}
-                                    (groupname, islef, {isupper_col} {weekday_col}
-                                    lesson_1, lesson_1_room, lesson_2, lesson_2_room,
-                                    lesson_3, lesson_3_room, lesson_4, lesson_4_room,
-                                    lesson_5, lesson_5_room, lesson_6, lesson_6_room)
-                            VALUES ('{group}', '{islef}', {isupper_value} {weekday_value}
-                                    '{lessons[0][0]}', '{lessons[0][1]}', '{lessons[1][0]}', '{lessons[1][1]}',
-                                    '{lessons[2][0]}', '{lessons[2][1]}', '{lessons[3][0]}', '{lessons[3][1]}',
-                                    '{lessons[4][0]}', '{lessons[4][1]}', '{lessons[5][0]}', '{lessons[5][1]}');""")
-        self.conn.commit()
+            self.cursor.execute(f"""
+                                INSERT INTO schedule
+                                        (groupname, islef, isupper, weekday, 
+                                        lesson_1, lesson_1_room, lesson_2, lesson_2_room,
+                                        lesson_3, lesson_3_room, lesson_4, lesson_4_room,
+                                        lesson_5, lesson_5_room, lesson_6, lesson_6_room)
+                                VALUES ('{group}', '{islef}', '{isupper}', '{day}', 
+                                        '{lessons[0][0]}', '{lessons[0][1]}', '{lessons[1][0]}', '{lessons[1][1]}',
+                                        '{lessons[2][0]}', '{lessons[2][1]}', '{lessons[3][0]}', '{lessons[3][1]}',
+                                        '{lessons[4][0]}', '{lessons[4][1]}', '{lessons[5][0]}', '{lessons[5][1]}');""")
+            self.conn.commit()
+        elif self.tablename == 'changes':
+            self.cursor.execute(f"""
+                                INSERT INTO changes
+                                        (groupname, islef,
+                                        lesson_1, lesson_1_room, lesson_2, lesson_2_room,
+                                        lesson_3, lesson_3_room, lesson_4, lesson_4_room,
+                                        lesson_5, lesson_5_room, lesson_6, lesson_6_room)
+                                VALUES ('{group}', '{islef}',
+                                        '{lessons[0][0]}', '{lessons[0][1]}', '{lessons[1][0]}', '{lessons[1][1]}',
+                                        '{lessons[2][0]}', '{lessons[2][1]}', '{lessons[3][0]}', '{lessons[3][1]}',
+                                        '{lessons[4][0]}', '{lessons[4][1]}', '{lessons[5][0]}', '{lessons[5][1]}');""")
+            self.conn.commit()
 
     def clear(self):
         if self.tablename not in ['sysdata', 'userdata']:
