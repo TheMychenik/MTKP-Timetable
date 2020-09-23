@@ -115,7 +115,7 @@ class mysqlapishit(__connection):
         lessons = self.cursor.fetchone()
         return lessons
 
-        def insert(self, group, islef, lessons, day=None, isupper=None):
+    def insert(self, group, islef, lessons, day=None, isupper=None):
         # (list) lessons: ключ - номер пары, кортеж - имя пары, кабинет
         if self.tablename == 'schedule':
             self.cursor.execute(f"""
