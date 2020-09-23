@@ -5,7 +5,7 @@ from ..utils import text_to_img as img
 
 
 def schedule_(user_id, message):
-    with sqlapi.mysqlapiwrapper() as db:  # доступ к бд
+    with sqlapi.mysqlapishit() as db:  # доступ к бд
         last_group = db.userdata.get_saved_group(user_id)  # поиск сохраненой пользователем группы
         if not last_group:
             return 'Не нашел вашу группу, напишите мне ее имя и я запомню.', ('text',)

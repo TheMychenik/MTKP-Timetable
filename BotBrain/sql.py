@@ -23,7 +23,7 @@ class __connection:
             pass
 
 
-class mysqlapiwrapper(__connection):
+class mysqlapishit(__connection):
     def __init__(self):
         super().__init__()
         self.tablename = None

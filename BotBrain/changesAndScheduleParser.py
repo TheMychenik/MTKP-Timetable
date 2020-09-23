@@ -9,7 +9,7 @@ from . import sql as sqlapi
 
 def parse():
     # заполняет замены и расписание в бд (отчищая предыдущие)
-    with sqlapi.mysqlapiwrapper() as db:
+    with sqlapi.mysqlapishit() as db:
         changes_last_url = db.sysdata.get_changes_last_url()
         schedule_last_url = db.sysdata.get_schedule_last_url()
 
@@ -22,7 +22,7 @@ def parse():
         logger.info('Downloaded')
         parsing.update_changes(path, changes_data[1])
         logger.info('Changes table updated')
-        with sqlapi.mysqlapiwrapper() as db:
+        with sqlapi.mysqlapishit() as db:
             db.sysdata.update_changes_last_url(changes_data[0])
             logger.info('Changes url and date updated')
 
@@ -32,7 +32,7 @@ def parse():
         logger.info('Downloaded')
         parsing.update_schedule(path)
         logger.info('Schedule table updated')
-        with sqlapi.mysqlapiwrapper() as db:
+        with sqlapi.mysqlapishit() as db:
             db.sysdata.update_schedule_last_url(schedule_data[0])
             logger.info('Schedule url updated')
 

@@ -7,10 +7,10 @@ def find_group_name(group_file_name):
 
 
 def find_date_from_text(msg):
-    data = re.search(r'\d{1,2}\.\d{1,2}', msg)
-    if data is not None:
+    data = re.search(r'\d{1,2}\.\d{1,2}\.\d{2,4}', msg)
+    try:
         return data.group(0)
-    else:
+    except AttributeError:
         return 'Дата не найдена'
 
 

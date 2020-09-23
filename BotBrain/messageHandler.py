@@ -32,7 +32,7 @@ def request_recognizer(user_id, message):
         else:
             group = text.check_for_group_tag(message)
             if group:
-                with sqlapi.mysqlapiwrapper() as db:
+                with sqlapi.mysqlapishit() as db:
                     db.userdata.update_saved_group(str(user_id), group)
                 answer = 'Запомнил! Теперь выбирайте, что хотите узнать.', ('text',)
     return answer
