@@ -43,6 +43,8 @@ def mailing():
         for group in groups_with_changes:
             db.cursor.execute(f"SELECT userid FROM userdata WHERE mailing='1' AND savedgroup='{group}';")
             userids_ditry = db.cursor.fetchall()
+            if len(userids_ditry) == 0:
+                continue
             userids = []
             for row in userids_ditry:
                 userids.append(row[0])
