@@ -57,34 +57,33 @@ def updateschedule():
     if data['type'] == 'confirmation':
         return callback_confirmation(data['group_id'])
 
-    elif data['type'] == 'wall_post_new' and data['event_id'] not in last_event_ids:
+    elif data['type'] == 'wall_post_new' and data['event_id'] not in last_event_ids and:
         """В группе в вк выкладывается пост, если его текст !lessons, то выполняется парсинг. 
         Потом пост удаляется и создается новый с отложенной публикацией на 30 минут. Такой таймер...
         Затем проверка, что новый запрос пришел не раньше чем через 15 мин от прошлого."""
 
         global last_updating_lessons_time
         unix_fiveteen_minutes = 900
-        if int(data['object']['date']) - int(last_updating_lessons_time) < unix_fiveteen_minutes:
-            append_last_eventid(data['event_id'])
-            return 'ok'
-    try:
-        if data['object']['text'] == '!lessons':
+        time_from_last_request = int(data['object']['date']) - int(last_updating_lessons_time)
+        print(time_from_last_request)
+
+        if time_from_last_request > unix_fiveteen_minutes and data['object']['text'] == '!lessons':
+
             parse()
-    except Exception as err:  # TODO нормальный перехват ошибок
-        logger.exception(err)
-    finally:
-        last_updating_lessons_time = data['object']['date']
-        append_last_eventid(data['event_id'])
-        thirty_minutes_of_unixtime = 1800
-        vkapi = VkApi(vk['user_token']).get_api()
 
-        vkapi.wall.delete(owner_id=data['object']['owner_id'],
-                          post_id=data['object']['id'])
+            last_updating_lessons_time = data['object']['date']
+            append_last_eventid(data['event_id'])
 
-        vkapi.wall.post(owner_id=vk['timerbotgroup_id'],
-                        message='!lessons',
-                        publish_date=data['object']['date'] + thirty_minutes_of_unixtime)
-        return 'ok'
+            vkapi = VkApi(vk['user_token']).get_api()
+
+            vkapi.wall.delete(owner_id=data['object']['owner_id'],
+                              post_id=data['object']['id'])
+
+            thirty_minutes_of_unixtime = 1800
+            vkapi.wall.post(owner_id=vk['timerbotgroup_id'],
+                            message='!lessons',
+                            publish_date=data['object']['date'] + thirty_minutes_of_unixtime)
+    return 'ok'
 
 
 @app.route('/update_server', methods=['POST'])

@@ -48,8 +48,8 @@ def __get_lessons(table, cell_index):  # Формирование списка �
             lessons_dict = [('Ошибка заполнения', 'Проверьте вручную')] * 6
 
         all_lessons.append([group_name, islef, lessons_dict])
-    except IndexError:  # в душе не ебу, что за ошибки ниже. Хер знает, когда писал код
-        print('index error')
+    except IndexError as err:  # в душе не ебу, что за ошибки ниже. Хер знает, когда писал код
+        logger.exception(err)
 
 
 def update_changes(path_to_file, file_name):
@@ -62,7 +62,8 @@ def update_changes(path_to_file, file_name):
             for less in all_lessons:
                 db.changes.insert(group=less[0], islef=less[1], lessons=less[2])
         except mysql.connector.errors.IntegrityError as err:
-            logger.info(err)
+            logger.exception(err)
         else:
             file_date = find_date_from_text(file_name)
             db.sysdata.update_changes_date(file_date)
+            logger.info('Changes table updated')

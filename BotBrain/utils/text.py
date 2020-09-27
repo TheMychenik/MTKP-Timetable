@@ -15,20 +15,26 @@ def find_date_from_text(msg):
 
 
 def clear_invisible_character(dirty_str, separator=''):  # удаляет непечатаемые символы из строки
-    clear_str = re.sub(r'[\s]', separator, dirty_str)
-    return clear_str.strip()
+    try:
+        clear_str = re.sub(r'[\s]', separator, dirty_str)
+        return clear_str.strip()
+    except AttributeError:
+        return ''
 
 
 def check_for_group_tag(message):
-    group = message.replace(' ', '')
-    if group.startswith(('Т', 'т')) and 8 > len(group) >= 4:
-        if group.find('-') != -1:
-            return group.upper()
+    if message is not None:
+        group = message.replace(' ', '')
+        if group.startswith(('Т', 'т')) and 8 > len(group) >= 4:
+            if group.find('-') != -1:
+                return group.upper()
+            else:
+                for char in range(len(group)):
+                    if group[char].isdigit():
+                        group = group[:char] + '-' + group[char:]
+                        break
+                return group.upper()
         else:
-            for char in range(len(group)):
-                if group[char].isdigit():
-                    group = group[:char] + '-' + group[char:]
-                    break
-            return group.upper()
+            return False
     else:
         return False

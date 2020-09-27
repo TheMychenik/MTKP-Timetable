@@ -31,13 +31,14 @@ def __getdata(posts, changes: bool):
                     name = content['doc']['title'].lower()
                     doctype = content['doc']['ext']
                     if doctype in filetypes and name.startswith(filenames):
+                        # составление ссылки
                         url = f"https://m.vk.com/doc{content['doc']['owner_id']}_{content['doc']['id']}"
                         return url, name
     else:
         return None, None
 
 
-def geturl():
+def get_url():
     """
     Возвращает массивы с ссылками и названиями файлов расписания и замен
 
@@ -49,13 +50,9 @@ def geturl():
         # выборка последних постов в группе
         posts = vkapi.wall.get(owner_id=vk['mtkpgroup_id'], filter='owner', count=10)
     except VkApi.exceptions().ApiError as err:
-        logger.opt(exception=True).error(err)
+        logger.exception(err)
         return (None, None), (None, None)
     else:
         changes_data = __getdata(posts, changes=True)
         schedule_data = __getdata(posts, changes=False)
         return changes_data, schedule_data
-
-
-if __name__ == '__main__':  # ультра мега юнит тестирование
-    print(geturl())
