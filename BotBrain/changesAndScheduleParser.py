@@ -20,6 +20,7 @@ def parse():
         parsing.update_changes(path, changes_data[1])
         with sqlapi.mysqlapiwrapper() as db:
             db.sysdata.update_changes_last_url(changes_data[0])
+        mailing()
 
     if schedule_data[0] is not None and schedule_data[0] != schedule_last_url:
         path = parsing.download(f'{schedule_data[0]}', schedule_data[1], path=dirs['docs'])
@@ -29,8 +30,6 @@ def parse():
 
     parsing.remove_folder_contents(path=dirs['docs'])
     parsing.remove_folder_contents(path=dirs['images'])
-
-    mailing()
 
 
 def mailing():
