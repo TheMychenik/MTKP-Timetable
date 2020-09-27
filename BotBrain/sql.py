@@ -153,10 +153,11 @@ class mysqlapiwrapper(__connection):
 
     def get_all_groups(self):
         allgroups = []
-        data = self.cursor.execute(f"SELECT DISTINCT groupname FROM {self.tablename};")
-        # for row in data:
-        #     allgroups.append(row[0])
-        return data
+        self.cursor.execute(f"SELECT DISTINCT groupname FROM {self.tablename};")
+        data = self.cursor.fetchall()
+        for row in data:
+            allgroups.append(row[0])
+        return allgroups
 
     def clear(self):
         if self.tablename not in ['sysdata', 'userdata']:
