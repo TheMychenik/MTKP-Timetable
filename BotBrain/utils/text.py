@@ -18,7 +18,7 @@ def clear_invisible_character(dirty_str, separator=''):  # удаляет неп
     try:
         clear_str = re.sub(r'[\s]', separator, dirty_str)
         return clear_str.strip()
-    except AttributeError:
+    except TypeError:
         return ''
 
 
