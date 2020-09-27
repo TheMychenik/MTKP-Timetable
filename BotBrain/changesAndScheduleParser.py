@@ -36,10 +36,12 @@ def mailing():
     """Рассылает замены всем кто включил эту опцию исходя из сохраненной группы"""
     userid_and_pathtoimg = []
     with sqlapi.mysqlapiwrapper() as db:
+
         data = db.userdata.get_all_mailing()
-        logger.info(data)
+        logger.info('Пользовытели ', data)
+
         groups_with_changes = db.changes.get_all_groups()
-        logger.info(groups_with_changes)
+        logger.info('Группы ', groups_with_changes)
 
         # for d in data:
         #     pass

@@ -105,8 +105,8 @@ class mysqlapiwrapper(__connection):
         self.conn.commit()
 
     def get_all_mailing(self):
-        self.cursor.execute(f"SELECT savedgroup FROM userdata WHERE mailing='1';")
-        status = self.cursor.fetchone()[0]
+        self.cursor.execute(f"SELECT userid, savedgroup FROM userdata WHERE mailing='1';")
+        status = self.cursor.fetchall()
         return status
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -152,8 +152,9 @@ class mysqlapiwrapper(__connection):
             self.conn.commit()
 
     def get_all_groups(self):
-        self.cursor.execute(f"SELECT DISTINCT groupname FROM {self.tablename};")
-        allgroups = self.cursor.fetchall()
+        allgroups = []
+        for row in self.cursor.execute(f"SELECT DISTINCT groupname FROM {self.tablename};"):
+            allgroups.append(row[0])
         return allgroups
 
     def clear(self):
