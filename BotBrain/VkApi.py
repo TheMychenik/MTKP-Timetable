@@ -18,17 +18,17 @@ class VkApi:
     def exceptions():
         return ex
 
-    def text_msg(self, peer_id: str, message: str, keyboard=None):
+    def text_msg(self, peer_id: str, message: str, keyboard=None, many=False):
         self.__vk_api.messages.send(user_id=peer_id,
                                     message=message,
                                     keyboard=keyboard,
                                     random_id=get_random_id())
 
-    def photo_msg(self, peer_id: str, path_to_photo, message: str = None):
+    def photo_msg(self, peer_id, path_to_photo, message: str = None, many=False):
         # TODO переделать совместно с созданием фоток
         upload = VkUpload(self.__vk_api)
-        resp = upload.photo_messages(peer_id=int(peer_id), photos=path_to_photo)
-        self.__vk_api.messages.send(user_id=peer_id,
+        resp = upload.photo_messages(peer_id=0, photos=path_to_photo)
+        self.__vk_api.messages.send(user_ids=peer_id,
                                     attachment=f"photo{resp[0]['owner_id']}_{resp[0]['id']}_{resp[0]['access_key']}",
                                     message=message,
                                     random_id=get_random_id())

@@ -105,7 +105,7 @@ class mysqlapiwrapper(__connection):
         self.conn.commit()
 
     def get_all_mailing(self):
-        self.cursor.execute(f"SELECT userid, savedgroup FROM userdata WHERE mailing='1';")
+        self.cursor.execute(f"SELECT userid, savedgroup FROM userdata WHERE mailing='1' ORDER BY savedgroup;")
         status = self.cursor.fetchall()
         return status
 
