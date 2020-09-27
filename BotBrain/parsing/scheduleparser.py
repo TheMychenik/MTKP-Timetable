@@ -78,6 +78,7 @@ def __get_lessons(sheet):
                     upper_lessons = []
                     lower_lessons = []
 
+                    islef = False
                     day += 1
     return all_lessons
 
