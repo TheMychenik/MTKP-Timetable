@@ -153,7 +153,8 @@ class mysqlapiwrapper(__connection):
 
     def get_all_groups(self):
         allgroups = []
-        for row in self.cursor.execute(f"SELECT DISTINCT groupname FROM {self.tablename};"):
+        data = self.cursor.execute(f"SELECT DISTINCT groupname FROM {self.tablename};")
+        for row in data:
             allgroups.append(row[0])
         return allgroups
 
