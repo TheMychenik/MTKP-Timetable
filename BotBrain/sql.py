@@ -115,7 +115,7 @@ class mysqlapiwrapper(__connection):
     #                                          schedule
     # ------------------------------------------------------------------------------------------------------------------
 
-    def get(self, group, isupper=True, day=None):
+    def get(self, group, isupper=None, day=None):
         if self.tablename == 'schedule':
             self.cursor.execute(f"SELECT * FROM schedule WHERE groupname='{group}' "
                                 f"and isupper='{isupper}' and weekday='{day}';")

@@ -16,7 +16,7 @@ def schedule_(user_id, message):
 
         isupper = weekday.check_isweek_upper(day)  # верхняя/нижняя неделя
         week = 'Верхняя' if isupper else 'Нижняя'
-        lessons_from_db = db.schedule.get(last_group, isupper=isupper, day=day)
+        lessons_from_db = db.schedule.get(last_group, isupper=int(isupper), day=day)
 
     if lessons_from_db:
         islef = bool(lessons_from_db[1])
