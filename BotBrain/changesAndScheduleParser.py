@@ -71,7 +71,5 @@ def mailing():
 
             path = img.create_photo(group, lessons, islef)
             vks = VkApi(vk['token'])
-            vks.photo_msg(peer_id=userids, path_to_photo=path)
-
-
-
+            vks.photo_msg(peer_id=userids, path_to_photo=path,
+                          message='Для отключения рассылки используйте команду - Рассылка')
