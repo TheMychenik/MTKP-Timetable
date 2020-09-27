@@ -28,6 +28,8 @@ def parse():
     parsing.remove_folder_contents(path=dirs['docs'])
     parsing.remove_folder_contents(path=dirs['images'])
 
+    mailing()
+
 
 def mailing():
     """Рассылает замены всем кто включил эту опцию исходя из сохраненной группы"""
