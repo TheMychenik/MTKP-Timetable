@@ -65,7 +65,6 @@ def updateschedule():
         global last_updating_lessons_time
         unix_fiveteen_minutes = 900
         time_from_last_request = int(data['object']['date']) - int(last_updating_lessons_time)
-        print(time_from_last_request)
 
         if time_from_last_request > unix_fiveteen_minutes and data['object']['text'] == '!lessons':
 

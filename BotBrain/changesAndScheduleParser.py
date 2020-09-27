@@ -1,3 +1,4 @@
+from loguru import logger
 from settings import dirs
 from . import parsing
 from . import sql as sqlapi
@@ -35,10 +36,10 @@ def mailing():
     """Рассылает замены всем кто включил эту опцию исходя из сохраненной группы"""
     userid_and_pathtoimg = []
     with sqlapi.mysqlapiwrapper() as db:
-        data = db.userdata.get_all_mailing_status()
-        print(data)
+        data = db.userdata.get_all_mailing()
+        logger.info(data)
         groups_with_changes = db.changes.get_all_groups()
-        print(groups_with_changes)
+        logger.info(groups_with_changes)
 
-        for d in data:
-            pass
+        # for d in data:
+        #     pass

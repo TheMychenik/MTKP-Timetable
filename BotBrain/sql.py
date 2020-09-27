@@ -100,14 +100,14 @@ class mysqlapiwrapper(__connection):
         status = self.cursor.fetchone()[0]
         return status
 
-    def get_all_mailing_status(self):
-        self.cursor.execute(f"SELECT mailing, savedgroup FROM userdata;")
-        status = self.cursor.fetchone()[0]
-        return status
-
     def update_mailing_status(self, user_id, status):
         self.cursor.execute(f"UPDATE userdata SET mailing='{status}' WHERE userid='{user_id}';")
         self.conn.commit()
+
+    def get_all_mailing(self):
+        self.cursor.execute(f"SELECT savedgroup FROM userdata WHERE mailing='1';")
+        status = self.cursor.fetchone()[0]
+        return status
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                          changes
