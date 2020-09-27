@@ -88,7 +88,7 @@ def update_schedule(path_to_file):
 
     lessons_data = __get_lessons(sheet)
 
-    with sqlapi.mysqlapishit() as db:
+    with sqlapi.mysqlapiwrapper() as db:
         db.schedule.clear()
         for data in lessons_data:
             db.schedule.insert(group=data[0], day=data[1], isupper=int(data[2]),

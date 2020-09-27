@@ -4,7 +4,7 @@ from ..utils import text_to_img as img
 
 
 def changes_(user_id, _):
-    with sqlapi.mysqlapishit() as db:  # доступ к бд
+    with sqlapi.mysqlapiwrapper() as db:  # доступ к бд
         last_group = db.userdata.get_saved_group(user_id)  # поиск сохраненой пользователем группы
         if not last_group:
             return 'Не нашел вашу группу, напишите мне ее имя и я запомню.', ('text',)
@@ -35,7 +35,7 @@ def changes_(user_id, _):
         return errormsg, ('text',)
 
     path = img.create_photo(user_id, lessons, islef)
-    return lessons, ('photo', path)
+    return _, ('photo', path)
 
 
 changes_command = command_system.Command()

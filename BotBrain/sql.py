@@ -23,7 +23,7 @@ class __connection:
             pass
 
 
-class mysqlapishit(__connection):
+class mysqlapiwrapper(__connection):
     def __init__(self):
         super().__init__()
         self.tablename = None
@@ -79,11 +79,6 @@ class mysqlapishit(__connection):
         self.cursor.execute(f"UPDATE {self.tablename} SET schedulelasturl='{url}';")
         self.conn.commit()
 
-    def get_all_groups(self):
-        self.cursor.execute(f"SELECT DISTINCT groupname FROM schedule;")
-        allgroups = self.cursor.fetchall()
-        return allgroups
-
     # ------------------------------------------------------------------------------------------------------------------
     #                                          userdata
     # ------------------------------------------------------------------------------------------------------------------
@@ -98,6 +93,20 @@ class mysqlapishit(__connection):
     def update_saved_group(self, user_id, group):
         self.cursor.execute(f"INSERT INTO userdata (userid) VALUES ('{user_id}') "
                             f"ON DUPLICATE KEY UPDATE savedgroup='{group}';")
+        self.conn.commit()
+
+    def get_mailing_status(self, user_id):
+        self.cursor.execute(f"SELECT mailing FROM userdata WHERE userid='{user_id}';")
+        status = self.cursor.fetchone()[0]
+        return status
+
+    def get_all_mailing_status(self):
+        self.cursor.execute(f"SELECT mailing, group FROM userdata;")
+        status = self.cursor.fetchone()[0]
+        return status
+
+    def update_mailing_status(self, user_id, status):
+        self.cursor.execute(f"UPDATE userdata SET mailing='{status}' WHERE userid='{user_id}';")
         self.conn.commit()
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -142,10 +151,19 @@ class mysqlapishit(__connection):
                                         '{lessons[4][0]}', '{lessons[4][1]}', '{lessons[5][0]}', '{lessons[5][1]}');""")
             self.conn.commit()
 
+    def get_all_groups(self):
+        self.cursor.execute(f"SELECT DISTINCT groupname FROM {self.tablename};")
+        allgroups = self.cursor.fetchall()
+        return allgroups
+
     def clear(self):
         if self.tablename not in ['sysdata', 'userdata']:
             self.cursor.execute(f"DELETE FROM {self.tablename};")
             self.conn.commit()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    #                                          config
+    # ------------------------------------------------------------------------------------------------------------------
 
     def create_tables(self):
         self.cursor.execute("""
