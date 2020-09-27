@@ -101,7 +101,7 @@ class mysqlapiwrapper(__connection):
         return status
 
     def get_all_mailing_status(self):
-        self.cursor.execute(f"SELECT mailing, group FROM userdata;")
+        self.cursor.execute(f"SELECT mailing, savedgroup FROM userdata;")
         status = self.cursor.fetchone()[0]
         return status
 
