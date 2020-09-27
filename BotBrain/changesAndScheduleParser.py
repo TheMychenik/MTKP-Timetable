@@ -38,11 +38,10 @@ def mailing():
     with sqlapi.mysqlapiwrapper() as db:
 
         data = db.userdata.get_all_mailing()
-        logger.info('Пользовователи ', data)
         print(data)
 
         groups_with_changes = db.changes.get_all_groups()
-        logger.info('Группы ', groups_with_changes)
+        print(groups_with_changes)
 
         # for d in data:
         #     pass
