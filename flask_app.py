@@ -57,7 +57,7 @@ def updateschedule():
     if data['type'] == 'confirmation':
         return callback_confirmation(data['group_id'])
 
-    elif data['type'] == 'wall_post_new' and data['event_id'] not in last_event_ids and:
+    elif data['type'] == 'wall_post_new' and data['event_id'] not in last_event_ids:
         """В группе в вк выкладывается пост, если его текст !lessons, то выполняется парсинг. 
         Потом пост удаляется и создается новый с отложенной публикацией на 30 минут. Такой таймер...
         Затем проверка, что новый запрос пришел не раньше чем через 15 мин от прошлого."""
