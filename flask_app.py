@@ -68,20 +68,21 @@ def updateschedule():
 
         if time_from_last_request > unix_fiveteen_minutes and data['object']['text'] == '!lessons':
 
-            parse()
+            try:
+                parse()
+            finally:
+                last_updating_lessons_time = data['object']['date']
+                append_last_eventid(data['event_id'])
 
-            last_updating_lessons_time = data['object']['date']
-            append_last_eventid(data['event_id'])
+                vkapi = VkApi(vk['user_token']).get_api()
 
-            vkapi = VkApi(vk['user_token']).get_api()
+                vkapi.wall.delete(owner_id=data['object']['owner_id'],
+                                  post_id=data['object']['id'])
 
-            vkapi.wall.delete(owner_id=data['object']['owner_id'],
-                              post_id=data['object']['id'])
-
-            thirty_minutes_of_unixtime = 1800
-            vkapi.wall.post(owner_id=vk['timerbotgroup_id'],
-                            message='!lessons',
-                            publish_date=data['object']['date'] + thirty_minutes_of_unixtime)
+                thirty_minutes_of_unixtime = 1800
+                vkapi.wall.post(owner_id=vk['timerbotgroup_id'],
+                                message='!lessons',
+                                publish_date=data['object']['date'] + thirty_minutes_of_unixtime)
     return 'ok'
 
 

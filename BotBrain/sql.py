@@ -53,27 +53,36 @@ class mysqlapiwrapper(__connection):
     # ------------------------------------------------------------------------------------------------------------------
 
     def get_changes_date(self):
-        self.cursor.execute(f"SELECT changesdate FROM {self.tablename};")
-        date = self.cursor.fetchone()[0]
-        return date
+        try:
+            self.cursor.execute(f"SELECT changesdate FROM {self.tablename};")
+            date = self.cursor.fetchone()[0]
+            return date
+        except TypeError:
+            return 'Дата не найдена!'
 
     def update_changes_date(self, date):
         self.cursor.execute(f"UPDATE {self.tablename} SET changesdate='{date}';")
         self.conn.commit()
 
     def get_changes_last_url(self):
-        self.cursor.execute(f"SELECT changeslasturl FROM {self.tablename};")
-        url = self.cursor.fetchone()[0]
-        return url
+        try:
+            self.cursor.execute(f"SELECT changeslasturl FROM {self.tablename};")
+            url = self.cursor.fetchone()[0]
+            return url
+        except TypeError:
+            return None
 
     def update_changes_last_url(self, url):
         self.cursor.execute(f"UPDATE {self.tablename} SET changeslasturl='{url}';")
         self.conn.commit()
 
     def get_schedule_last_url(self):
-        self.cursor.execute(f"SELECT schedulelasturl FROM {self.tablename};")
-        url = self.cursor.fetchone()[0]
-        return url
+        try:
+            self.cursor.execute(f"SELECT schedulelasturl FROM {self.tablename};")
+            url = self.cursor.fetchone()[0]
+            return url
+        except TypeError:
+            return None
 
     def update_schedule_last_url(self, url):
         self.cursor.execute(f"UPDATE {self.tablename} SET schedulelasturl='{url}';")
@@ -96,9 +105,12 @@ class mysqlapiwrapper(__connection):
         self.conn.commit()
 
     def get_mailing_status(self, user_id):
-        self.cursor.execute(f"SELECT mailing FROM userdata WHERE userid='{user_id}';")
-        status = self.cursor.fetchone()[0]
-        return status
+        try:
+            self.cursor.execute(f"SELECT mailing FROM userdata WHERE userid='{user_id}';")
+            status = self.cursor.fetchone()[0]
+            return status
+        except TypeError:
+            return False
 
     def update_mailing_status(self, user_id, status):
         self.cursor.execute(f"UPDATE userdata SET mailing='{status}' WHERE userid='{user_id}';")
