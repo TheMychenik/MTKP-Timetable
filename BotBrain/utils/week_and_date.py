@@ -58,4 +58,4 @@ def check_isweek_upper(compare_day: int):
     weeknum = datetime.datetime.now().isocalendar()[1]
     if compare_day < datetime.date.today().isoweekday():
         weeknum += 1
-    return True if weeknum % 2 == 0 else False
+    return False if weeknum % 2 == 0 else True
