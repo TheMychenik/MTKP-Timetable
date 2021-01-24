@@ -105,7 +105,7 @@ def gitwebhook():
 
 def append_last_eventid(eventid: str):
     """
-    Добовляет id события в массив и следит чтобы было не больше 5
+    Добавляет id события в массив и следит чтобы было не больше 5
     :param eventid:
     """
     last_event_ids.append(eventid)
