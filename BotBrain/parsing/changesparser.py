@@ -30,32 +30,17 @@ def __get_lessons(table, cell_index):  # Формирование списка �
     group_name = find_group_name(group_file_name)
     islef = True if group_name != group_file_name else False
     try:
-        # Пока дистанционка нет кабинетов и по строки по другому идут
-        # while row_index < len(table.rows):
-        #     # if row_index % 2 != 0:  # (нечетная строка) В документе на нечетных строчках идут названия пар
-        #     current_lesson_name = clear_invisible_character(table.rows[row_index].cells[cell_index].text, separator=' ')
-        #     if current_lesson_name.find('отпущена') != -1:
-        #         # если  на этой паре "группа отпущена", то это записывается в список, а кабинет не указывается
-        #         lessons_dict.append(('!!!Группа отпущена!!!', ''))
-        #         row_index += 2
-        #     else:
-        #         row_index += 1
-        #         current_cabinet_number = clear_invisible_character(table.rows[row_index].cells[cell_index].text,
-        #                                                            separator='')
-        #         lessons_dict.append((current_lesson_name, current_cabinet_number))
-        #         row_index += 1
-
-        while row_index < len(table.rows):  # удалить, когда выйдем на очное
+        while row_index < len(table.rows):
             # if row_index % 2 != 0:  # (нечетная строка) В документе на нечетных строчках идут названия пар
             current_lesson_name = clear_invisible_character(table.rows[row_index].cells[cell_index].text, separator=' ')
             if current_lesson_name.find('отпущена') != -1:
                 # если  на этой паре "группа отпущена", то это записывается в список, а кабинет не указывается
                 lessons_dict.append(('!!!Группа отпущена!!!', ''))
-                row_index += 1
+                row_index += 2
             else:
-                current_cabinet_number = ''
-                if (current_lesson_name):
-                    current_cabinet_number = 'дист.'
+                row_index += 1
+                current_cabinet_number = clear_invisible_character(table.rows[row_index].cells[cell_index].text,
+                                                                   separator='')
                 lessons_dict.append((current_lesson_name, current_cabinet_number))
                 row_index += 1
 
