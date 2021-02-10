@@ -11,7 +11,11 @@ def find_date_from_text(msg):
     try:
         return data.group(0)
     except AttributeError:
-        return 'Дата не найдена'
+        try:
+            data = re.search(r'\d{1,2}\.\d{1,2}', msg)
+            return data.group(0)
+        except AttributeError:
+            return 'Дата не найдена'
 
 
 def clear_invisible_character(dirty_str, separator=''):  # удаляет непечатаемые символы из строки
